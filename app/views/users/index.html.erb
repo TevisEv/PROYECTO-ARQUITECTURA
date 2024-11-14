@@ -1,0 +1,29 @@
+<h1>Gestión de Usuarios</h1>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Correo Electrónico</th>
+      <th>Rol</th>
+      <th>Creado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role.titleize %></td>
+        <td><%= user.created_at.strftime('%d-%m-%Y %H:%M') %></td>
+        <td>
+          <%= link_to 'Editar', edit_user_path(user), class: 'btn btn-warning btn-sm' %>
+          <%= link_to 'Eliminar', user_path(user), method: :delete, data: { confirm: '¿Estás seguro?' }, class: 'btn btn-danger btn-sm' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Nuevo Usuario', new_user_path, class: 'btn btn-primary' %>

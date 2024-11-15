@@ -1,14 +1,15 @@
 class User < ApplicationRecord
+  has_many :samples, dependent: :destroy
+  # Roles de usuario
   enum role: { cliente: 0, laboratorista: 1, admin: 2 }
 
-  # Devise módulos
-  devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :validatable
+  # Devise módulos para autenticación
+  devise :database_authenticatable, :recoverable, :rememberable, :validatable
 
   # Validaciones
-  validates :email, presence: true, uniqueness: true
-  validates :password, presence: true, confirmation: true, if: :password_required?
-  validates :role, presence: true, inclusion: { in: roles.keys }
+  validates :email, presence: true, uniqueness: { case_sensitive: false, message: 'El correo ya está registrado.' }
+  validates :password, presence: true, confirmation: true, length: { minimum: 6 }, if: :password_required?
+  validates :role, presence: true, inclusion: { in: roles.keys, message: 'El rol no es válido.' }
 
   private
 
@@ -16,4 +17,5 @@ class User < ApplicationRecord
     new_record? || password.present?
   end
 end
+
 

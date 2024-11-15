@@ -1,55 +1,63 @@
 <h1 class="text-center text-primary mb-4">Crear Nuevo Usuario</h1>
 
 <div class="container mt-4 shadow-lg p-5 bg-light rounded">
-  <!-- Mostrar mensajes flash si existen -->
-  <% if flash[:notice] %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <%= flash[:notice] %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% elsif flash[:alert] %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <%= flash[:alert] %>
+  <!-- Mensajes flash -->
+  <% flash.each do |key, message| %>
+    <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+      <%= message %>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   <% end %>
 
-  <!-- Mostrar errores relacionados al modelo -->
+  <!-- Errores globales -->
   <% if @user.errors.any? %>
     <div class="alert alert-danger">
-      <h4>Errores:</h4>
+      <h4><i class="fas fa-exclamation-circle"></i> Hubo problemas con los siguientes campos:</h4>
       <ul>
-        <% @user.errors.full_messages.each do |message| %>
+        <% @user.errors.full_messages.uniq.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <!-- Formulario para crear un nuevo usuario -->
-  <%= form_with model: @user, local: true, class: "needs-validation" do |form| %>
+  <!-- Formulario -->
+  <%= form_with model: @user, local: true, data: { turbo: false }, class: "needs-validation" do |form| %>
+    
     <!-- Campo de Email -->
     <div class="mb-4">
       <%= form.label :email, 'Correo Electrónico', class: "form-label fw-bold text-dark" %>
-      <%= form.email_field :email, class: "form-control border-primary", placeholder: 'Ejemplo: usuario@example.com' %>
+      <%= form.email_field :email, class: "form-control border-primary #{'is-invalid' if @user.errors[:email].any?}", placeholder: 'Ejemplo: usuario@example.com' %>
+      <% @user.errors[:email].uniq.each do |error| %>
+        <div class="invalid-feedback"><%= error %></div>
+      <% end %>
     </div>
 
     <!-- Campo de Contraseña -->
     <div class="mb-4">
       <%= form.label :password, 'Contraseña', class: "form-label fw-bold text-dark" %>
-      <%= form.password_field :password, class: "form-control border-primary", placeholder: 'Ingrese una contraseña' %>
+      <%= form.password_field :password, class: "form-control border-primary #{'is-invalid' if @user.errors[:password].any?}", placeholder: 'Ingrese una contraseña' %>
+      <% @user.errors[:password].uniq.each do |error| %>
+        <div class="invalid-feedback"><%= error %></div>
+      <% end %>
     </div>
 
     <!-- Campo de Confirmación de Contraseña -->
     <div class="mb-4">
       <%= form.label :password_confirmation, 'Confirmar Contraseña', class: "form-label fw-bold text-dark" %>
-      <%= form.password_field :password_confirmation, class: "form-control border-primary", placeholder: 'Confirme la contraseña' %>
+      <%= form.password_field :password_confirmation, class: "form-control border-primary #{'is-invalid' if @user.errors[:password_confirmation].any?}", placeholder: 'Confirme la contraseña' %>
+      <% @user.errors[:password_confirmation].uniq.each do |error| %>
+        <div class="invalid-feedback"><%= error %></div>
+      <% end %>
     </div>
 
     <!-- Campo de Rol -->
     <div class="mb-4">
       <%= form.label :role, 'Rol del Usuario', class: "form-label fw-bold text-dark" %>
-      <%= form.select :role, User.roles.keys.map { |role| [role.titleize, role] }, {}, class: "form-select border-primary" %>
+      <%= form.select :role, User.roles.keys.map { |role| [role.titleize, role] }, {}, class: "form-select border-primary #{'is-invalid' if @user.errors[:role].any?}" %>
+      <% @user.errors[:role].uniq.each do |error| %>
+        <div class="invalid-feedback"><%= error %></div>
+      <% end %>
     </div>
 
     <!-- Botones -->

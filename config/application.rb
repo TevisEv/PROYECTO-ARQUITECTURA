@@ -11,6 +11,15 @@ module App
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
+    # Configuración para la localización por defecto en español
+    config.i18n.available_locales = [:en, :es]
+    config.i18n.default_locale = :es
+
+
+    # Configuración para cargar traducciones desde el directorio locales
+    # Rails ya incluye esta ruta por defecto, no necesitas modificarla a menos que uses subcarpetas adicionales.
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '*.{rb,yml}')]
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

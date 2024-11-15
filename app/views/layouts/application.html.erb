@@ -11,6 +11,16 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container my-5">
+      <!-- Mostrar el botón de Cerrar sesión solo si el usuario está firmado y no se ha mostrado antes -->
+      <% if user_signed_in? %>
+        <div class="d-flex justify-content-end">
+          <%= link_to 'Cerrar sesión', destroy_user_session_path, method: :delete, class: 'btn btn-danger btn-lg', data: { confirm: '¿Estás seguro?' } unless defined?(@logout_button_shown) %>
+          <% @logout_button_shown = true %> <!-- Marca el botón como mostrado -->
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

@@ -35,3 +35,5 @@ end
 gem "base64", "~> 0.2.0", require: false
 gem "bigdecimal", "~> 3.1", require: false
 gem "mutex_m", "~> 0.2.0", require: false
+
+gem "mailgun-ruby", "~> 1.2"

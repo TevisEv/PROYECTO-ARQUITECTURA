@@ -1,5 +1,6 @@
 class User < ApplicationRecord
-  has_many :samples, dependent: :destroy
+  has_many :samples, foreign_key: :user_id, dependent: :destroy
+  has_many :assigned_samples, class_name: 'Sample', foreign_key: :laboratorista_id, dependent: :destroy
   # Roles de usuario
   enum role: { cliente: 0, laboratorista: 1, admin: 2 }
 
@@ -17,5 +18,3 @@ class User < ApplicationRecord
     new_record? || password.present?
   end
 end
-
-

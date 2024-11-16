@@ -13,17 +13,12 @@
 <body>
   <div class="container mt-5">
     <!-- Header con botones de navegación -->
-    <% if user_signed_in? %>
-    <div class="d-flex justify-content-between mb-4">
-      <a href="<%= new_sample_path %>" class="btn btn-success">
-        <i class="fas fa-plus"></i> Añadir Nueva Muestra
-      </a>
-      <%= link_to destroy_user_session_path, method: :delete, class: "btn btn-danger", title: "Cerrar Sesión" do %>
-        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-      <% end %>
-      
-    </div>
-
+    <% if user_signed_in? && current_user.laboratorista? %>
+      <div class="d-flex justify-content-between mb-4">
+        <a href="<%= new_sample_path %>" class="btn btn-success">
+          <i class="fas fa-plus"></i> Añadir Nueva Muestra
+        </a>
+      </div>
     <% end %>
 
     <!-- Título -->
@@ -39,7 +34,9 @@
               <th>Resultados</th>
               <th>Correo del Cliente</th>
               <th>Correo del Laboratorista</th>
-              <th>Acciones</th>
+              <% if current_user.laboratorista? %>
+                <th>Acciones</th>
+              <% end %>
             </tr>
           </thead>
           <tbody>
@@ -49,17 +46,19 @@
                 <td><%= sample.results %></td>
                 <td><%= sample.user.email if sample.user %></td>
                 <td><%= sample.laboratorista.email if sample.laboratorista %></td>
-                <td class="d-flex">
-                <!-- Botón Editar -->
-                <%= link_to edit_sample_path(sample), class: "btn btn-primary btn-sm me-2", title: "Editar" do %>
-                  <i class="fas fa-edit"></i> Editar
+                <% if current_user.laboratorista? %>
+                  <td class="d-flex">
+                    <!-- Botón Editar -->
+                    <%= link_to edit_sample_path(sample), class: "btn btn-primary btn-sm me-2", title: "Editar" do %>
+                      <i class="fas fa-edit"></i> Editar
+                    <% end %>
+                  
+                    <!-- Botón Eliminar -->
+                    <%= link_to sample_path(sample), method: :delete, data: { confirm: '¿Estás seguro de que deseas eliminar esta muestra?' }, class: "btn btn-danger btn-sm", title: "Eliminar" do %>
+                      <i class="fas fa-trash"></i> Eliminar
+                    <% end %>
+                  </td>
                 <% end %>
-              
-                <!-- Botón Eliminar -->
-                <%= link_to sample_path(sample), method: :delete, data: { confirm: '¿Estás seguro de que deseas eliminar esta muestra?' }, class: "btn btn-danger btn-sm", title: "Eliminar" do %>
-                  <i class="fas fa-trash"></i> Eliminar
-                <% end %>
-              </td>                       
               </tr>
             <% end %>
           </tbody>
